@@ -16,7 +16,6 @@ export const getBooks = async (req, res, pool) => {
         return res.status(200).json({
             status: "success",
             books: result.rows
-
         })
     } catch (error) {
         return res.status(500).json({
@@ -105,7 +104,6 @@ export const editBook = async (req, res, pool) => {
             setValues.push(`stock = $${values.length}`)
         }
 
-        // Si no se proporcionan campos, devolver un error
         if (setValues.length === 0) {
             return res.status(400).json({
                 status: "error",
@@ -113,7 +111,6 @@ export const editBook = async (req, res, pool) => {
             })
         }
 
-        // Construye la consulta
         query += setValues.join(', ') + ` WHERE id = $${values.length + 1} RETURNING *`
         values.push(id)
 
@@ -135,7 +132,7 @@ export const editBook = async (req, res, pool) => {
     } catch (error) {
         return res.status(500).json({
             status: "error",
-            message: "Server internal error",
+            message: "Ha ocurrido un error en el servidor",
             error: error.message
         })
     }
@@ -143,5 +140,39 @@ export const editBook = async (req, res, pool) => {
 
 // Solicitud DELETE para eliminar un libro existente
 
+export const deleteBook= async(req, res, pool)=>{
+    const {id} = req.params
 
+    if(!id){
+        return res.status(404).json({
+            status: "error",
+            message: "No existe el libro"
+        })
+    }
 
+    try{
+        const query = `DELETE FROM LIBROS WHERE id = $1 RETURNING*` 
+
+        const result = await pool.query(query, [id])
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                status: "error",
+                message: "El libro no existe o ya ha sido eliminado."
+            })
+        }
+        
+        return res.status(200).json({
+            status: "success",
+            message: "Se ha borrado el libro exitosamente ! ! !",
+            book: result.rows[0]
+        })
+
+    }catch(error){
+        return res.status(500).json({
+            status: "error",
+            message: "Ha ocurrido un error en el servidor",
+            error: error.message
+        })
+    }
+}

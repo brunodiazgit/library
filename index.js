@@ -2,7 +2,8 @@ import express from "express"
 import cors from "cors"
 import pkg from "pg"
 
-import libraryRoutes from "./db/routes/libraryRoutes.js"
+import employeesRoutes from "./db/routes/employeesRoutes.js"
+import loginRoutes from "./db/routes/loginRoutes.js"
 
 console.log("Inicializando api")
 console.log("Conectadose al servidor...")
@@ -24,7 +25,8 @@ const pool = new Pool({
     port: 5432,
 })
 
-app.use('/api/books', libraryRoutes(pool))
+app.use('/api/employee', employeesRoutes(pool))
+app.use('api/login', loginRoutes(pool))
 
 app.listen(puerto, ()=>{
     console.log("Corriendo servidor en el puerto: " + puerto)
