@@ -26,7 +26,7 @@ const pool = new Pool({
 })
 
 app.use('/api/employee', employeesRoutes(pool))
-app.use('api/login', loginRoutes(pool))
+app.use('/api/auth', loginRoutes(pool))
 
 app.listen(puerto, ()=>{
     console.log("Corriendo servidor en el puerto: " + puerto)
