@@ -4,6 +4,7 @@ import pkg from "pg"
 
 import employeesRoutes from "./db/routes/employeesRoutes.js"
 import loginRoutes from "./db/routes/loginRoutes.js"
+import usersRoutes from "./db/routes/usersRoutes.js"
 
 console.log("Inicializando api")
 console.log("Conectadose al servidor...")
@@ -27,6 +28,7 @@ const pool = new Pool({
 
 app.use('/api/employee', employeesRoutes(pool))
 app.use('/api/auth', loginRoutes(pool))
+app.use('/api/user', usersRoutes(pool))
 
 app.listen(puerto, ()=>{
     console.log("Corriendo servidor en el puerto: " + puerto)
