@@ -10,7 +10,7 @@ console.log("Inicializando api")
 console.log("Conectadose al servidor...")
 
 const app = express()
-const puerto = 3100 
+const puerto = 3900 
 
 app.use(cors())
 app.use(express.json())

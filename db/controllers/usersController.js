@@ -61,7 +61,7 @@ export const loanBook = async (req, res, pool) => {
 }
 
 export const returnBook = async (req, res, pool) => {
-    const { id } = req.params // Esto es el libro_id
+    const { id } = req.params
 
     try {
         if (!id) {

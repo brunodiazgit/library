@@ -26,13 +26,40 @@ export const getBooks = async (req, res, pool) => {
     }
 }
 
+// Solicitud GET para ver el detalle de un libro
 
+export const detailBook = async (req, res, pool) => {
+    const { id } = req.params
+    try {
+        const query = `SELECT * FROM LIBROS WHERE id = $1 `
+        const result = await pool.query(query,[id])
+
+        if(result.rowCount === 0){
+            return res.status(404).json({
+                status: "error",
+                message: "libro no econtrado."
+            })
+        }
+
+        return res.status(200).json({
+            status: "success",
+            detail: result.rows[0]
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            status: "error",
+            message: "Ha ocurrido un error dentro del servidor",
+            error: error.message
+        })
+    }
+}
 
 
 // Solicitud POST para añadir libro
 
 export const addBook = async (req, res, pool) => {
-    const { titulo, autor, descripcion, genero, portada_url, stock } = req.body
+    const { titulo, autor, descripcion, genero, stock } = req.body
 
     if (!titulo || !autor || !descripcion || !genero) {
         return res.status(400).json({
@@ -43,11 +70,11 @@ export const addBook = async (req, res, pool) => {
 
     try {
         const query = `
-        INSERT INTO LIBROS(titulo, autor, descripcion, genero, portada_url, stock)
+        INSERT INTO LIBROS(titulo, autor, descripcion, genero, stock)
         VALUES($1, $2, $3, $4, $5, $6)
         RETURNING*
         `
-        const values = [titulo, autor, descripcion, genero, portada_url || null, stock || 0]
+        const values = [titulo, autor, descripcion, genero || null, stock || 0]
 
         const result = await pool.query(query, values)
 
@@ -72,7 +99,7 @@ export const addBook = async (req, res, pool) => {
 
 export const editBook = async (req, res, pool) => {
     const { id } = req.params
-    const { titulo, autor, descripcion, genero, portada_url, stock } = req.body
+    const { titulo, autor, descripcion, genero, stock } = req.body
 
     try {
         let query = `UPDATE LIBROS SET `
@@ -95,10 +122,7 @@ export const editBook = async (req, res, pool) => {
             values.push(genero)
             setValues.push(`genero = $${values.length}`)
         }
-        if (portada_url !== undefined) {
-            values.push(portada_url || null)
-            setValues.push(`portada_url = $${values.length}`)
-        }
+        
         if (stock !== undefined) {
             values.push(stock || 0)
             setValues.push(`stock = $${values.length}`)
@@ -140,18 +164,18 @@ export const editBook = async (req, res, pool) => {
 
 // Solicitud DELETE para eliminar un libro existente
 
-export const deleteBook= async(req, res, pool)=>{
-    const {id} = req.params
+export const deleteBook = async (req, res, pool) => {
+    const { id } = req.params
 
-    if(!id){
+    if (!id) {
         return res.status(404).json({
             status: "error",
             message: "No existe el libro"
         })
     }
 
-    try{
-        const query = `DELETE FROM LIBROS WHERE id = $1 RETURNING*` 
+    try {
+        const query = `DELETE FROM LIBROS WHERE id = $1 RETURNING*`
 
         const result = await pool.query(query, [id])
 
@@ -161,14 +185,14 @@ export const deleteBook= async(req, res, pool)=>{
                 message: "El libro no existe o ya ha sido eliminado."
             })
         }
-        
+
         return res.status(200).json({
             status: "success",
             message: "Se ha borrado el libro exitosamente ! ! !",
             book: result.rows[0]
         })
 
-    }catch(error){
+    } catch (error) {
         return res.status(500).json({
             status: "error",
             message: "Ha ocurrido un error en el servidor",

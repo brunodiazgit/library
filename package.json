@@ -8,10 +8,12 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "nodemon index.js"
+    "backend": "nodemon index.js",
+    "start": "concurrently \"npm run dev\" \"npm run backend\""
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "concurrently": "^9.0.1",
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "jsonwebtoken": "^9.0.2",
