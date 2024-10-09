@@ -4,19 +4,18 @@ import BookDetailContainer from "./components/BookDetailContainer"
 import {
   BrowserRouter,
   Routes,
-  Route
+  Route,
 } from "react-router-dom"
 
 
 function App() {
-
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/home" element={<BookListContainer />} />
-        <Route path="/book" element={<BookDetailContainer />} />
+        <Route path="/books/:id" element={<BookDetailContainer />} />
       </Routes>
     </BrowserRouter>
   )

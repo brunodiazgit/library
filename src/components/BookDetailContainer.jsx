@@ -1,18 +1,30 @@
-import { useContext } from "react"
-import { BookContext } from "../context/BookProvider"
+import { useState, useEffect } from "react"
+import { useParams } from "react-router-dom"
 
-function BookDetailContainer(){
-    const {books} = useContext(BookContext)
+function BookDetailContainer() {
+    const [detail, setDetail] = useState([])
+    let { id } = useParams()
 
-    return(
+    useEffect(() => {
+        const fetchApi = async () => {
+            try {
+                const response = await fetch(`http://localhost:3900/api/employee/books/${id}`)
+                if (!response.ok) {
+                    throw new Error("response was not ok")
+                }
+                const data = await response.json()
+                setDetail(data)
+            } catch (error) {
+                console.log("an error ocurred: " + error)
+            }
+        }
+        fetchApi()
+    }, [id])
+
+
+    return (
         <div>
-            {books.map(book =>(
-                <div key={book.id}>
-                    <img src={book.img} alt="imagen de libro"/>
-                    
-
-                </div>
-            ))}
+            <h1>{detail.titulo}</h1>
         </div>
     )
 }

@@ -59,7 +59,7 @@ export const detailBook = async (req, res, pool) => {
 // Solicitud POST para añadir libro
 
 export const addBook = async (req, res, pool) => {
-    const { titulo, autor, descripcion, genero, stock } = req.body
+    const { titulo, autor, descripcion, genero, stock, imagen_url } = req.body
 
     if (!titulo || !autor || !descripcion || !genero) {
         return res.status(400).json({
@@ -70,11 +70,11 @@ export const addBook = async (req, res, pool) => {
 
     try {
         const query = `
-        INSERT INTO LIBROS(titulo, autor, descripcion, genero, stock)
+        INSERT INTO LIBROS(titulo, autor, descripcion, genero, stock, imagen_url)
         VALUES($1, $2, $3, $4, $5, $6)
         RETURNING*
         `
-        const values = [titulo, autor, descripcion, genero || null, stock || 0]
+        const values = [titulo, autor, descripcion, genero, imagen_url || null, stock || 0]
 
         const result = await pool.query(query, values)
 
@@ -99,7 +99,7 @@ export const addBook = async (req, res, pool) => {
 
 export const editBook = async (req, res, pool) => {
     const { id } = req.params
-    const { titulo, autor, descripcion, genero, stock } = req.body
+    const { titulo, autor, descripcion, genero, stock, imagen_url } = req.body
 
     try {
         let query = `UPDATE LIBROS SET `
@@ -126,6 +126,11 @@ export const editBook = async (req, res, pool) => {
         if (stock !== undefined) {
             values.push(stock || 0)
             setValues.push(`stock = $${values.length}`)
+        }
+
+        if (imagen_url !== undefined) {
+            values.push(imagen_url)
+            setValues.push(`imagen_url = $${values.length}`)
         }
 
         if (setValues.length === 0) {
