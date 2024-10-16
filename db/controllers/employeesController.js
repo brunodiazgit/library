@@ -59,8 +59,8 @@ export const detailBook = async (req, res, pool) => {
 // Solicitud POST para añadir libro
 
 export const addBook = async (req, res, pool) => {
-    const { titulo, autor, descripcion, genero, stock, imagen_url } = req.body
-
+    const { titulo, autor, descripcion, genero, stock } = req.body
+    const imagen_url = req.file ? `/covers/${req.file.filename}` : null // Obtener la URL de la imagen
     if (!titulo || !autor || !descripcion || !genero) {
         return res.status(400).json({
             status: "error",

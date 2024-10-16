@@ -79,7 +79,7 @@ export const login = async(req, res, pool) => {
 
         // Genera un token JWT
         const token = jwt.sign(
-            { id: user.id, correo: user.correo, rol: rol },
+            { id: user.id, nombre: user.nombre, correo: user.correo, rol: rol },
             'QKDSAPKGP$!6590_25137MNP',
             { expiresIn: '8h' }
         )

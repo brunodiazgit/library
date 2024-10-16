@@ -1,10 +1,12 @@
 import { Link, useNavigate } from "react-router-dom"
-import { useState } from "react"
+import { useState, useContext } from "react"
+import {AuthContext} from "./context/AuthProvider"
 
 function SignIn() {
     const [correo, setCorreo] = useState("")
     const [contraseña, setContraseña] = useState("")
     const [mensaje, setMensaje] = useState(null)
+    const { login } = useContext(AuthContext)
 
     const navigate = useNavigate()
 
@@ -29,7 +31,7 @@ function SignIn() {
                 setCorreo("")
                 setContraseña("")
 
-                localStorage.setItem('token', data.token)
+                login(data.token)
 
                 navigate('/')
             } else {
